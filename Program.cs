@@ -14,15 +14,15 @@ namespace praysim
             var world = new Creature[800, 800];
             var i = new Instance(world, 800, 800, 50, 25);
 
-            for (int x = 0; x< i.x_size; x++)
+            for (int x = 0; x< i.XSize; x++)
             {
-                for (int y = 0; y < i.y_size; y++)
+                for (int y = 0; y < i.YSize; y++)
                 {
                     world[x, y] = new Creature();
                 }
             }
 
-            var window = new RenderWindow(new VideoMode(i.x_size, i.y_size), "PreySim", Styles.Close);
+            var window = new RenderWindow(new VideoMode(i.XSize, i.YSize), "PreySim", Styles.Close);
 
             // events
             window.Closed += (object sender, EventArgs e) =>
@@ -35,20 +35,20 @@ namespace praysim
                 {
                     // set pray
                     Console.WriteLine("new pray at " + e.X + "," + e.Y);
-                    if (e.X < i.x_size && e.Y < i.y_size && e.X > -1 && e.Y > -1)
+                    if (e.X < i.XSize && e.Y < i.YSize && e.X > -1 && e.Y > -1)
                     {
-                        i.world[e.X, e.Y].type = CreatureType.Pray;
-                        i.world[e.X, e.Y].ticks = 0;
+                        i.World[e.X, e.Y].Type = CreatureType.Pray;
+                        i.World[e.X, e.Y].Ticks = 0;
                     }
                 }
                 else if (e.Button == Mouse.Button.Right)
                 {
                     // set predator
                     Console.WriteLine("new pred at " + e.X + "," + e.Y);
-                    if (e.X < i.x_size && e.Y < i.y_size && e.X > -1 && e.Y > -1)
+                    if (e.X < i.XSize && e.Y < i.YSize && e.X > -1 && e.Y > -1)
                     {
-                        i.world[e.X, e.Y].type = CreatureType.Predator;
-                        i.world[e.X, e.Y].ticks = 0;
+                        i.World[e.X, e.Y].Type = CreatureType.Predator;
+                        i.World[e.X, e.Y].Ticks = 0;
                     }
                 }
             };
@@ -56,19 +56,19 @@ namespace praysim
             {
                 if (e.Code == Keyboard.Key.P)
                 {
-                    i.max_ticks_to_death++;
+                    i.MaxTicksToDeath++;
                 }
                 else if (e.Code == Keyboard.Key.O)
                 {
-                    i.max_ticks_to_death--;
+                    i.MaxTicksToDeath--;
                 }
                 else if (e.Code == Keyboard.Key.Q)
                 {
-                    i.dup_interval--;
+                    i.DupInterval--;
                 }
                 else if (e.Code == Keyboard.Key.W)
                 {
-                    i.dup_interval++;
+                    i.DupInterval++;
                 }
             };
 
@@ -111,8 +111,8 @@ namespace praysim
                 fps_counter.DisplayedString = "FPS: "+ Math.Round(1/dt);
                 pray_counter.DisplayedString = "PRAY COUNT: " + i.GetPrayCount();
                 pred_counter.DisplayedString = "PRED COUNT: " + i.GetPredCount();
-                max_life_counter.DisplayedString = "MAX LIFE: " + i.max_ticks_to_death;
-                dup_int_counter.DisplayedString = "DUP INTERVAL: " + i.dup_interval;
+                max_life_counter.DisplayedString = "MAX LIFE: " + i.MaxTicksToDeath;
+                dup_int_counter.DisplayedString = "DUP INTERVAL: " + i.DupInterval;
 
                 // draw
                 window.Draw(sprite_to_draw);

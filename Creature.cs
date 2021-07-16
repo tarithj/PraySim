@@ -13,15 +13,15 @@ namespace praysim
 
     public class Creature
     {
-        public CreatureType type;
-        public uint ticks;
+        public CreatureType Type;
+        public uint Ticks;
 
         public Creature() { }
 
         public Creature(CreatureType type, uint ticks = 0)
         {
-            this.type = type;
-            this.ticks = ticks;
+            Type = type;
+            Ticks = ticks;
         }
     }
 }

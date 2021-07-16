@@ -4,159 +4,156 @@ using System.Text;
 
 namespace praysim
 {
-    class Instance
+    internal class Instance
     {
-        public Creature[,] world;
-        public uint x_size;
-        public uint y_size;
-        public uint max_ticks_to_death;
-        public uint dup_interval;
+        public readonly Creature[,] World;
+        public readonly uint XSize;
+        public readonly uint YSize;
+        public uint MaxTicksToDeath;
+        public uint DupInterval;
 
-        public Instance(Creature[,] world, uint x_size, uint y_size, uint max_ticks_to_death, uint dup_interval)
+        public Instance(Creature[,] world, uint xSize, uint ySize, uint maxTicksToDeath, uint dupInterval)
         {
-            this.world = world;
-            this.x_size = x_size;
-            this.y_size = y_size;
-            this.max_ticks_to_death = max_ticks_to_death;
-            this.dup_interval = dup_interval;
+            World = world;
+            XSize = xSize;
+            YSize = ySize;
+            MaxTicksToDeath = maxTicksToDeath;
+            DupInterval = dupInterval;
         }
 
         public uint GetPredCount()
         {
-            uint pred_counter = 0;
-            for (uint x = 0; x < x_size; x++)
+            uint predCounter = 0;
+            for (uint x = 0; x < XSize; x++)
             {
-                for (uint y = 0; y < y_size; y++) 
+                for (uint y = 0; y < YSize; y++) 
                 {
-                    if (world[x, y].type == CreatureType.Predator)
+                    if (World[x, y].Type == CreatureType.Predator)
                     {
-                        pred_counter++;
+                        predCounter++;
                     }
                 }
             }
-            return pred_counter;
+            return predCounter;
         }
 
         public uint GetPrayCount()
         {
-            uint pray_counter = 0;
-            for (uint x = 0; x < x_size; x++)
+            uint prayCounter = 0;
+            for (uint x = 0; x < XSize; x++)
             {
-                for (uint y = 0; y < y_size; y++)
+                for (uint y = 0; y < YSize; y++)
                 {
-                    if (world[x, y].type == CreatureType.Pray)
+                    if (World[x, y].Type == CreatureType.Pray)
                     {
-                        pray_counter++;
+                        prayCounter++;
                     }
                 }
             }
-            return pray_counter;
+            return prayCounter;
         }
 
-        private void Move_Cell(uint from_x, uint from_y, uint to_x, uint to_y)
+        private void Move_Cell(uint fromX, uint fromY, uint toX, uint toY)
         {
-            if (to_x > 0 && to_x < 800 && to_y > 0 && to_y < 800)
+            if (toX <= 0 || toX >= 800 || toY <= 0 || toY >= 800) return;
+            if (World[toX, toY].Type != CreatureType.None)
             {
-                if (world[to_x, to_y].type != CreatureType.None)
+                switch (World[toX, toY].Type)
                 {
-                    if (world[to_x, to_y].type == CreatureType.Pray && world[from_x, from_y].type == CreatureType.Predator)
-                    {
-                        // predetor catches pray and multiplies
-                        world[to_x, to_y].type = CreatureType.Predator;
-                        world[to_x, to_y].ticks = 0;
-                    }
-                    else if (world[to_x, to_y].type == CreatureType.Predator && world[from_x, from_y].type == CreatureType.Pray)
-                    {
-                        // pray lands on predetor and predetor multiplies
-                        world[from_x, from_y].type = CreatureType.Predator;
-                        world[from_x, from_y].ticks = 0;
-                    }
+                    case CreatureType.Pray when World[fromX, fromY].Type == CreatureType.Predator:
+                        // predator catches pray and multiplies
+                        World[toX, toY].Type = CreatureType.Predator;
+                        World[toX, toY].Ticks = 0;
+                        break;
+                    case CreatureType.Predator when World[fromX, fromY].Type == CreatureType.Pray:
+                        // pray lands on predator and predator multiplies
+                        World[fromX, fromY].Type = CreatureType.Predator;
+                        World[fromX, fromY].Ticks = 0;
+                        break;
                 }
-                else
-                {
-                    world[to_x, to_y] = world[from_x, from_y];
-                    world[from_x, from_y] = new Creature(CreatureType.None);
-                }
+            }
+            else
+            {
+                World[toX, toY] = World[fromX, fromY];
+                World[fromX, fromY] = new Creature(CreatureType.None);
             }
         }
 
         public void Step()
         {
-            for (uint x = 0; x < x_size; x++)
+            for (uint x = 0; x < XSize; x++)
             {
-                for (uint y = 0; y < y_size; y++)
+                for (uint y = 0; y < YSize; y++)
                 {
-                    var cell = world[x, y];
-                    world[x, y].ticks++;
+                    var cell = World[x, y];
+                    World[x, y].Ticks++;
 
-                    if (cell.ticks > max_ticks_to_death)
+                    if (cell.Ticks > MaxTicksToDeath)
                     {
                         // the cell dies
-                        world[x, y] = new Creature(CreatureType.None);
+                        World[x, y] = new Creature(CreatureType.None);
                     }
 
-                    if (cell.ticks % dup_interval == 0 && cell.type == CreatureType.Pray)
+                    if (cell.Ticks % DupInterval == 0 && cell.Type == CreatureType.Pray)
                     {
                         if (y+1 >= 800)
                         {
-                            world[x, y - 1] = new Creature(CreatureType.Pray);
+                            World[x, y - 1] = new Creature(CreatureType.Pray);
                         }
                         else
                         {
-                            world[x, y + 1] = new Creature(CreatureType.Pray);
+                            World[x, y + 1] = new Creature(CreatureType.Pray);
                         }
                     }
 
-                    if (cell.type != CreatureType.None)
-                    {
-                        Random rnd = new Random();
-                        int rnd_direction = rnd.Next(8);
+                    if (cell.Type == CreatureType.None) continue;
+                    var rnd = new Random();
+                    var rndDirection = rnd.Next(8);
 
-                        switch (rnd_direction)
-                        {
-                            case 0:
-                                Move_Cell(x, y, x - 1, y + 1);
-                                break;
-                            case 1:
-                                Move_Cell(x, y, x, y + 1);
-                                break;
-                            case 2:
-                                Move_Cell(x, y, x + 1, y + 1);
-                                break;
-                            case 3:
-                                Move_Cell(x, y, x + 1, y);
-                                break;
-                            case 4:
-                                Move_Cell(x, y, x + 1, y - 1);
-                                break;
-                            case 5:
-                                Move_Cell(x, y, x, y - 1);
-                                break;
-                            case 6:
-                                Move_Cell(x, y, x - 1, y - 1);
-                                break;
-                            default:
-                                Move_Cell(x, y, x - 1, y);
-                                break;
-                        }
+                    switch (rndDirection)
+                    {
+                        case 0:
+                            Move_Cell(x, y, x - 1, y + 1);
+                            break;
+                        case 1:
+                            Move_Cell(x, y, x, y + 1);
+                            break;
+                        case 2:
+                            Move_Cell(x, y, x + 1, y + 1);
+                            break;
+                        case 3:
+                            Move_Cell(x, y, x + 1, y);
+                            break;
+                        case 4:
+                            Move_Cell(x, y, x + 1, y - 1);
+                            break;
+                        case 5:
+                            Move_Cell(x, y, x, y - 1);
+                            break;
+                        case 6:
+                            Move_Cell(x, y, x - 1, y - 1);
+                            break;
+                        default:
+                            Move_Cell(x, y, x - 1, y);
+                            break;
                     }
                 }
             }
         }
 
-        public SFML.Graphics.Image GetWorldImage(uint x_size, uint y_size)
+        public SFML.Graphics.Image GetWorldImage(uint xSize, uint ySize)
         {
             var black = new SFML.Graphics.Color(18, 18, 18);
             var green = new SFML.Graphics.Color(0, 0xff, 0);
             var red = new SFML.Graphics.Color(0xff, 0, 0);
 
-            var dest = new SFML.Graphics.Image(x_size, y_size);
+            var dest = new SFML.Graphics.Image(xSize, ySize);
 
-            for (uint x = 0; x < x_size; x++)
+            for (uint x = 0; x < xSize; x++)
             {
-                for (uint y = 0; y < y_size; y++)
+                for (uint y = 0; y < ySize; y++)
                 {
-                    switch (world[x, y].type)
+                    switch (World[x, y].Type)
                     {
                         case CreatureType.None:
                             dest.SetPixel(x, y, black);
