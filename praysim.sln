@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "praysim", "praysim.csproj", "{ECB12842-5C1C-442E-9C5F-62CA7045886E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECB12842-5C1C-442E-9C5F-62CA7045886E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB12842-5C1C-442E-9C5F-62CA7045886E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB12842-5C1C-442E-9C5F-62CA7045886E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB12842-5C1C-442E-9C5F-62CA7045886E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B5F94EF-2B55-4511-96DC-C0E34153CB96}
+	EndGlobalSection
+EndGlobal
