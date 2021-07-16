@@ -21,6 +21,10 @@ namespace praysim
             DupInterval = dupInterval;
         }
 
+        /// <summary>
+        /// Returns the number of predators in the current world
+        /// </summary>
+        /// <returns>Number of predators</returns>
         public uint GetPredCount()
         {
             uint predCounter = 0;
@@ -37,6 +41,10 @@ namespace praysim
             return predCounter;
         }
 
+        /// <summary>
+        /// Returns the number of prays in the current world
+        /// </summary>
+        /// <returns>Number of prays</returns>
         public uint GetPrayCount()
         {
             uint prayCounter = 0;
@@ -53,6 +61,9 @@ namespace praysim
             return prayCounter;
         }
 
+        /// <summary>
+        /// Moves cell to destination
+        /// </summary>
         private void Move_Cell(uint fromX, uint fromY, uint toX, uint toY)
         {
             if (toX <= 0 || toX >= 800 || toY <= 0 || toY >= 800) return;
@@ -79,6 +90,9 @@ namespace praysim
             }
         }
 
+        /// <summary>
+        /// Preforms a step in the simulation
+        /// </summary>
         public void Step()
         {
             for (uint x = 0; x < XSize; x++)
@@ -96,6 +110,7 @@ namespace praysim
 
                     if (cell.Ticks % DupInterval == 0 && cell.Type == CreatureType.Pray)
                     {
+                        // duplicates cell
                         if (y+1 >= 800)
                         {
                             World[x, y - 1] = new Creature(CreatureType.Pray);
@@ -141,6 +156,9 @@ namespace praysim
             }
         }
 
+        /// <summary>
+        /// Generates a Image of the world
+        /// </summary>
         public SFML.Graphics.Image GetWorldImage(uint xSize, uint ySize)
         {
             var black = new SFML.Graphics.Color(18, 18, 18);

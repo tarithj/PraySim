@@ -23,11 +23,11 @@ namespace praysim
             var window = new RenderWindow(new VideoMode(i.XSize, i.YSize), "PreySim", Styles.Close);
 
             // events
-            window.Closed += (object sender, EventArgs e) =>
+            window.Closed += (sender, e) =>
             {
                 window.Close();
             };
-            window.MouseButtonReleased += (object sender, MouseButtonEventArgs e) =>
+            window.MouseButtonReleased += (sender, e) =>
             {
                 if (e.Button == Mouse.Button.Left)
                 {
@@ -52,44 +52,43 @@ namespace praysim
             };
             window.KeyPressed += (object sender, KeyEventArgs e) =>
             {
-                if (e.Code == Keyboard.Key.P)
+                switch (e.Code)
                 {
-                    i.MaxTicksToDeath++;
-                }
-                else if (e.Code == Keyboard.Key.O)
-                {
-                    i.MaxTicksToDeath--;
-                }
-                else if (e.Code == Keyboard.Key.Q)
-                {
-                    i.DupInterval--;
-                }
-                else if (e.Code == Keyboard.Key.W)
-                {
-                    i.DupInterval++;
+                    case Keyboard.Key.P:
+                        i.MaxTicksToDeath++;
+                        break;
+                    case Keyboard.Key.O:
+                        i.MaxTicksToDeath--;
+                        break;
+                    case Keyboard.Key.Q:
+                        i.DupInterval--;
+                        break;
+                    case Keyboard.Key.W:
+                        i.DupInterval++;
+                        break;
                 }
             };
 
             window.SetFramerateLimit(60);
 
-            var texture_to_draw = new Texture(800, 800);
-            var sprite_to_draw = new Sprite(texture_to_draw);
+            var textureToDraw = new Texture(800, 800);
+            var spriteToDraw = new Sprite(textureToDraw);
 
             var viewport = i.GetWorldImage(800, 800);
-            texture_to_draw.Update(viewport);
+            textureToDraw.Update(viewport);
 
-            var fps_counter = new Text("FPS:", new Font(Resource1.Roboto_Regular), 25);
-            var pray_counter = new Text("PRAY COUNT:", new Font(Resource1.Roboto_Regular), 25);
-            var pred_counter = new Text("PRED COUNT:", new Font(Resource1.Roboto_Regular), 25);
-            var max_life_counter = new Text("MAX LIFE:", new Font(Resource1.Roboto_Regular), 25);
-            var dup_int_counter = new Text("DUP FREQ:", new Font(Resource1.Roboto_Regular), 25);
+            var fpsCounter = new Text("FPS:", new Font(Resource1.Roboto_Regular), 25);
+            var prayCounter = new Text("PRAY COUNT:", new Font(Resource1.Roboto_Regular), 25);
+            var predCounter = new Text("PRED COUNT:", new Font(Resource1.Roboto_Regular), 25);
+            var maxLifeCounter = new Text("MAX LIFE:", new Font(Resource1.Roboto_Regular), 25);
+            var dupIntCounter = new Text("DUP FREQ:", new Font(Resource1.Roboto_Regular), 25);
             var controls = new Text("press q to dec and w to inc dup interval\npress o to dec and p to inc max life", new Font(Resource1.Roboto_Regular), 25);
 
 
-            pray_counter.Position = new SFML.System.Vector2f(0, 40);
-            pred_counter.Position = new SFML.System.Vector2f(0, 80);
-            max_life_counter.Position = new SFML.System.Vector2f(0, 120);
-            dup_int_counter.Position = new SFML.System.Vector2f(0, 160);
+            prayCounter.Position = new SFML.System.Vector2f(0, 40);
+            predCounter.Position = new SFML.System.Vector2f(0, 80);
+            maxLifeCounter.Position = new SFML.System.Vector2f(0, 120);
+            dupIntCounter.Position = new SFML.System.Vector2f(0, 160);
             controls.Position = new SFML.System.Vector2f(350, 0);
 
             var clock = new SFML.System.Clock();
@@ -102,23 +101,23 @@ namespace praysim
                 window.Clear();
 
                 viewport = i.GetWorldImage(800, 800);
-                texture_to_draw.Update(viewport);
+                textureToDraw.Update(viewport);
 
 
                 // update gui components
-                fps_counter.DisplayedString = "FPS: "+ Math.Round(1/dt);
-                pray_counter.DisplayedString = "PRAY COUNT: " + i.GetPrayCount();
-                pred_counter.DisplayedString = "PRED COUNT: " + i.GetPredCount();
-                max_life_counter.DisplayedString = "MAX LIFE: " + i.MaxTicksToDeath;
-                dup_int_counter.DisplayedString = "DUP INTERVAL: " + i.DupInterval;
+                fpsCounter.DisplayedString = "FPS: "+ Math.Round(1/dt);
+                prayCounter.DisplayedString = "PRAY COUNT: " + i.GetPrayCount();
+                predCounter.DisplayedString = "PRED COUNT: " + i.GetPredCount();
+                maxLifeCounter.DisplayedString = "MAX LIFE: " + i.MaxTicksToDeath;
+                dupIntCounter.DisplayedString = "DUP INTERVAL: " + i.DupInterval;
 
                 // draw
-                window.Draw(sprite_to_draw);
-                window.Draw(fps_counter);
-                window.Draw(pred_counter);
-                window.Draw(pray_counter);
-                window.Draw(max_life_counter);
-                window.Draw(dup_int_counter);
+                window.Draw(spriteToDraw);
+                window.Draw(fpsCounter);
+                window.Draw(predCounter);
+                window.Draw(prayCounter);
+                window.Draw(maxLifeCounter);
+                window.Draw(dupIntCounter);
                 window.Draw(controls);
 
                 window.Display();
