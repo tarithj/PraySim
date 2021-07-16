@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace praysim
+﻿namespace praysim
 {
     public enum CreatureType
     {
