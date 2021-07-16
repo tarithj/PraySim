@@ -8,9 +8,7 @@ namespace praysim
     {
         static void Main(string[] args)
         {
-
-
-
+            
             var world = new Creature[800, 800];
             var i = new Instance(world, 800, 800, 50, 25);
 
@@ -72,7 +70,7 @@ namespace praysim
                 }
             };
 
-            window.SetFramerateLimit(30);
+            window.SetFramerateLimit(60);
 
             var texture_to_draw = new Texture(800, 800);
             var sprite_to_draw = new Sprite(texture_to_draw);
